@@ -1,0 +1,10 @@
+server:
+  port: 0 #랜덤으로 포트 설정
+
+spring:
+  application:
+    name: login-service  #Eureka에 등록되는 서비스 이름
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}  #포트가 중복으로 설정되어 구분하기 위한 인스턴스 아이디 값 설정
