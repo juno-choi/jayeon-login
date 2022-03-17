@@ -1,6 +1,7 @@
 package com.juno.loginservice.controller;
 
 import com.juno.loginservice.api.CommonResponse;
+import com.juno.loginservice.controller.vo.RequestLogin;
 import com.juno.loginservice.controller.vo.RequestUser;
 import com.juno.loginservice.service.UserService;
 import com.juno.loginservice.service.vo.ResponseUser;
@@ -32,4 +33,5 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 }

@@ -2,10 +2,10 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: login-service
+      name: login
 #      profile:
 management:
   endpoints:
     web:
       exposure:
-        include: health, httptrace, busrefresh
+        include: refresh, health, httptrace, busrefresh
