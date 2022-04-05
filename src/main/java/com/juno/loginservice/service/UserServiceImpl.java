@@ -1,6 +1,6 @@
 package com.juno.loginservice.service;
 
-import com.juno.loginservice.Entity.UserEntity;
+import com.juno.loginservice.entity.UserEntity;
 import com.juno.loginservice.controller.vo.RequestUser;
 import com.juno.loginservice.repository.UserRepository;
 import com.juno.loginservice.service.vo.ResponseUser;
