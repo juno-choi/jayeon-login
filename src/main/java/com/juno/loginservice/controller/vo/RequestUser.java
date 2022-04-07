@@ -15,6 +15,9 @@ public class RequestUser {
     @NotEmpty(message = "비밀번호는 비어있을 수 없습니다.")
     @Length(min = 6, max = 12, message = "비밀번호는 6~12 글자입니다.")
     private String pw;
+    @NotEmpty(message = "비밀번호 재입력은 비어있을 수 없습니다.")
+    @Length(min = 6, max = 12, message = "비밀번호는 6~12 글자입니다.")
+    private String rePw;
     @NotEmpty(message = "이름은 비어있을 수 없습니다.")
     private String name;
     @NotEmpty(message = "우편번호는 비어있을 수 없습니다.")
