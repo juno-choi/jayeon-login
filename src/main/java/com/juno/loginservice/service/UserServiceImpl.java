@@ -1,8 +1,11 @@
 package com.juno.loginservice.service;
 
+import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.entity.UserEntity;
 import com.juno.loginservice.controller.vo.RequestUser;
+import com.juno.loginservice.exception.CommonException;
 import com.juno.loginservice.repository.UserRepository;
+import com.juno.loginservice.service.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseUser;
 import com.juno.loginservice.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseUser join(RequestUser user) {
+
+        UserEntity findUser = userRepository.findByUserId(user.getUserId());
+        if(findUser != null) throw new UserException(UserCode.EXIST_USER);
+
         UserEntity userEntity = UserEntity.builder()
                 .userId(user.getUserId())
                 .pw(passwordEncoder.encode(user.getPw()))
