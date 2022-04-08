@@ -1,5 +1,6 @@
 package com.juno.loginservice.security;
 
+import com.juno.loginservice.service.GameUserService;
 import com.juno.loginservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userService;
+    private final GameUserService gameUserService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final Environment env;
 
@@ -24,6 +26,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/join").permitAll();
         http.authorizeRequests().antMatchers("/login").permitAll();
+
+        /*
+         game user 회원 로그인 요청 및 jwt 발급
+         */
+        http.authorizeRequests().antMatchers("/game").permitAll()
+        .and().addFilter(getAuthenticationGameFilter());
 
         http.authorizeRequests().antMatchers("/**").permitAll()
         .and().addFilter(getAuthenticationFilter()) //filter 추가
@@ -39,9 +47,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return auth;
     }
 
+    private GameAuthFilter getAuthenticationGameFilter() throws Exception {
+        GameAuthFilter auth = new GameAuthFilter(gameUserService, env);
+        auth.setFilterProcessesUrl("/game/login");  //filter 작동 url 변경
+        auth.setAuthenticationManager(authenticationManager());
+
+        return auth;
+    }
+
     //인증 service 등록
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(gameUserService).passwordEncoder(passwordEncoder);
     }
 }
