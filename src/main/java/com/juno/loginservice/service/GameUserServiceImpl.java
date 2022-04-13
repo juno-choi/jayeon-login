@@ -1,8 +1,11 @@
 package com.juno.loginservice.service;
 
+import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
 import com.juno.loginservice.entity.GameUserEntity;
+import com.juno.loginservice.exception.JoinException;
 import com.juno.loginservice.repository.GameUserRepository;
+import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.GameUserVo;
 import com.juno.loginservice.service.vo.ResponseGameUser;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,12 @@ public class GameUserServiceImpl implements GameUserService{
 
     @Override
     public ResponseGameUser join(RequestGameUser requestGameUser) {
+
+        //유효성 검사
+        GameUserEntity user = gameUserRepository.findByUserId(requestGameUser.getUserId());
+        if(user != null){
+            throw new JoinException(UserCode.EXIST_USER);
+        }
 
         GameUserEntity gameUserEntity = GameUserEntity.builder()
                 .userId(requestGameUser.getUserId())

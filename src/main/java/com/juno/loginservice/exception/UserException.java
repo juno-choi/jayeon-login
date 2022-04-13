@@ -1,4 +1,4 @@
-package com.juno.loginservice.service.exception;
+package com.juno.loginservice.exception;
 
 import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.exception.CommonException;

@@ -4,15 +4,14 @@ import com.juno.loginservice.api.ErrorApi;
 import com.juno.loginservice.api.ValidError;
 import com.juno.loginservice.api.ErrorListApi;
 import com.juno.loginservice.exception.CommonException;
-import com.juno.loginservice.service.exception.UserException;
+import com.juno.loginservice.exception.JoinException;
+import com.juno.loginservice.exception.UserException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,4 +39,11 @@ public class CommonAdvice {
         ErrorListApi error = new ErrorListApi(ue.getCode(), ue.getMsg(), errorApiList);
         return ResponseEntity.status(ue.getStatus()).body(error);
     }
+
+    @ExceptionHandler(JoinException.class)
+    public ResponseEntity<Object> joinExceptionAdvice(JoinException je){
+        ErrorApi error = new ErrorApi(je.getCode(), je.getMsg());
+        return ResponseEntity.status(je.getStatus()).body(error);
+    }
+
 }

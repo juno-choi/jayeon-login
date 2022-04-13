@@ -5,7 +5,7 @@ import com.juno.loginservice.api.CommonEnum;
 import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
 import com.juno.loginservice.service.GameUserService;
-import com.juno.loginservice.service.exception.UserException;
+import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseGameUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
