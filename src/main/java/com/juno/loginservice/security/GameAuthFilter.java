@@ -56,12 +56,19 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         GameUserVo user = gameUserService.getUserDetailByUserId(((User) authResult.getPrincipal()).getUsername());
         log.info("로그인 성공 = {}",user.toString());
-        String token = Jwts.builder()
+        String access_token = Jwts.builder()
                 .setSubject(user.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) //파기일
+                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //파기일
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                 .compact();
 
-        response.setHeader("token", token);
+        String refresh_token = Jwts.builder()
+                .setSubject(user.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() +  60 * 60 * 1000)) //파기일
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
+                .compact();
+
+        response.setHeader("access_token", access_token);
+        response.setHeader("refresh_token", refresh_token);
     }
 }
