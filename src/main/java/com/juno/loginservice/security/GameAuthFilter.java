@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,6 +64,11 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                 .compact();
 
-        response.setHeader("token", token);
+        //response.setHeader("token", token);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("token",token);
+        new ObjectMapper().writeValue(response.getOutputStream(), map);
+
     }
 }
