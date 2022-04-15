@@ -4,6 +4,8 @@ import com.juno.loginservice.api.CommonApi;
 import com.juno.loginservice.api.CommonEnum;
 import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
+import com.juno.loginservice.entity.GameRole;
+import com.juno.loginservice.entity.GameUserEntity;
 import com.juno.loginservice.service.GameUserService;
 import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseGameUser;
@@ -15,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/game")
@@ -34,4 +37,20 @@ public class GameUserController {
         CommonApi<Object> response = new CommonApi(CommonEnum.OK, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PostMapping("/role")
+    public ResponseEntity<CommonApi> role(){
+        GameRole role = new GameRole(null, "ROLE_ADMIN");
+        GameRole gameRole = gameUserService.saveRole(role);
+        CommonApi<Object> response = new CommonApi(CommonEnum.OK, gameRole);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<CommonApi> allUser(){
+        List<GameUserEntity> allUser = gameUserService.getAllUser();
+        CommonApi<Object> response = new CommonApi(CommonEnum.OK, allUser);
+        return ResponseEntity.ok().body(response);
+    }
+
 }
