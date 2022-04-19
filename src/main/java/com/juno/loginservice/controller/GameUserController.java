@@ -26,6 +26,7 @@ import java.util.List;
 public class GameUserController {
     private final GameUserService gameUserService;
 
+    //회원가입
     @PostMapping("/join")
     public ResponseEntity<CommonApi> join(@RequestBody @Valid RequestGameUser requestGameuser, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -37,7 +38,11 @@ public class GameUserController {
         CommonApi<Object> response = new CommonApi(CommonEnum.OK, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+    
+    //role 추가
+    /*
+     * 추후에 role 매개변수를 통해 role을 추가하는 메서드로 변경해서 사용할 것
+     */
     @PostMapping("/role")
     public ResponseEntity<CommonApi> role(){
         GameRole role = new GameRole(null, "ROLE_ADMIN");
@@ -46,6 +51,8 @@ public class GameUserController {
         return ResponseEntity.ok().body(response);
     }
 
+    //모든 game user만 조회해오는 로직
+    //임시용
     @GetMapping("/user")
     public ResponseEntity<CommonApi> allUser(){
         List<GameUserEntity> allUser = gameUserService.getAllUser();

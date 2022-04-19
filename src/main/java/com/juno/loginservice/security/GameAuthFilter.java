@@ -58,6 +58,7 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         GameUserVo user = gameUserService.getUserDetailByUserId(((User) authResult.getPrincipal()).getUsername());
         log.info("로그인 성공 = {}",user.toString());
+
         String token = Jwts.builder()
                 .setSubject(user.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) //파기일

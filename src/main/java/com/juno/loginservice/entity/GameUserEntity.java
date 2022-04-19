@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class GameUserEntity{
     private String pw;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<GameRole> roles = new ArrayList<>();
+    private List<GameRole> roles = new ArrayList<>();
 
 
     @CreationTimestamp

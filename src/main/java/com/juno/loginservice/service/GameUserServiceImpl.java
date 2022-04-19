@@ -12,6 +12,7 @@ import com.juno.loginservice.service.vo.GameUserVo;
 import com.juno.loginservice.service.vo.ResponseGameUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -76,6 +78,7 @@ public class GameUserServiceImpl implements GameUserService{
                 .userId(userEntity.getUserId())
                 .name(userEntity.getName())
                 .pw(userEntity.getPw())
+                .roles(userEntity.getRoles())
                 .createdAt(userEntity.getCreatedAt())
                 .build();
 
@@ -92,6 +95,10 @@ public class GameUserServiceImpl implements GameUserService{
         GameUserEntity user = gameUserRepository.findByUserId(userId);
         if(user == null) throw new UsernameNotFoundException("user가 존재하지 않습니다.");
 
-        return new User(user.getUserId(), user.getPw(), true, true, true, true, new ArrayList<>());
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new User(user.getUserId(), user.getPw(), true, true, true, true, authorities);
     }
 }
