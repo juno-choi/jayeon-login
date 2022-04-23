@@ -4,6 +4,7 @@ import com.juno.loginservice.api.CommonApi;
 import com.juno.loginservice.api.CommonEnum;
 import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
+import com.juno.loginservice.controller.vo.Token;
 import com.juno.loginservice.entity.GameRole;
 import com.juno.loginservice.entity.GameUserEntity;
 import com.juno.loginservice.service.GameUserService;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -60,4 +63,12 @@ public class GameUserController {
         return ResponseEntity.ok().body(response);
     }
 
+    /*
+     * refresh token 발급
+     */
+    @PostMapping("/token/refresh")
+    public ResponseEntity<Token> tokenRefresh(HttpServletRequest req){
+        Token token = gameUserService.refreshToken(req);
+        return ResponseEntity.ok().body(token);
+    }
 }

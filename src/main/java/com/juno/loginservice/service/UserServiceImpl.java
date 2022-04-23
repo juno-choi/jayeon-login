@@ -3,6 +3,7 @@ package com.juno.loginservice.service;
 import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.entity.UserEntity;
 import com.juno.loginservice.controller.vo.RequestUser;
+import com.juno.loginservice.exception.CommonException;
 import com.juno.loginservice.repository.UserRepository;
 import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseUser;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService{
     public ResponseUser join(RequestUser user) {
 
         UserEntity findUser = userRepository.findByUserId(user.getUserId());
-        if(findUser != null) throw new UserException(UserCode.EXIST_USER);
+        if(findUser != null) throw new CommonException(UserCode.EXIST_USER.getCode(), UserCode.EXIST_USER.getMsg(), UserCode.EXIST_USER.getStatus());
 
         UserEntity userEntity = UserEntity.builder()
                 .userId(user.getUserId())

@@ -22,6 +22,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,14 +64,14 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
 
         String access_token = Jwts.builder()
                 .setSubject(user.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) //파기일
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.access-token.expiration_time")))) //파기일
                 .claim("roles", user.getRoles().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                 .compact();
 
         String refresh_token = Jwts.builder()
                 .setSubject(user.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) //파기일
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.refresh-token.expiration_time")))) //파기일
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                 .compact();
 
@@ -83,6 +84,7 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, String> map = new HashMap<>();
         map.put("access_token",access_token);
         map.put("refresh_token",refresh_token);
+        response.setContentType(MediaType.APPLICATION_JSON);
         new ObjectMapper().writeValue(response.getOutputStream(), map);
 
     }
