@@ -29,6 +29,9 @@ public class GameUserEntity{
     private String pw;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "game_user_role"
+    )
     private List<GameRole> roles = new ArrayList<>();
 
 
