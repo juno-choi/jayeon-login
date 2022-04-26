@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class RequestLogin {
-    String userId;
-    String pw;
+    private String userId;
+    private String pw;
 }
