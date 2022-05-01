@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class GameUserVo {
+    private Long id;
     private String userId;
     private String name;
     private String pw;
@@ -19,7 +20,8 @@ public class GameUserVo {
     private LocalDateTime createdAt;
 
     @Builder
-    public GameUserVo(@NonNull String userId, @NonNull String name, @NonNull String pw, @NonNull List<GameRole> roles, @NonNull LocalDateTime createdAt) {
+    public GameUserVo(Long id, @NonNull String userId, @NonNull String name, @NonNull String pw, @NonNull List<GameRole> roles, @NonNull LocalDateTime createdAt) {
+        this.id = id;
         this.userId = userId;
         this.name = name;
         this.pw = pw;

@@ -60,7 +60,7 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         GameUserVo user = gameUserService.getUserDetailByUserId(((User) authResult.getPrincipal()).getUsername());
-        log.info("로그인 성공 = {}",user.getUserId());
+        log.info("로그인 성공 = {}",user.getId());
 
         String access_token = Jwts.builder()
                 .setSubject(user.getUserId())
@@ -75,15 +75,21 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                 .compact();
 
+        Map<String, String> userMap = new HashMap<>();
+        userMap.put("id", user.getId().toString());
+        userMap.put("userId", user.getUserId());
+        userMap.put("userName",user.getName());
+        userMap.put("role", user.getRoles().toString());
         /*
          * 헤더로 보낼 경우
          */
 //        response.setHeader("access_token", access_token);
 //        response.setHeader("refresh_token", refresh_token);
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("access_token",access_token);
         map.put("refresh_token",refresh_token);
+        map.put("user",userMap);
         response.setContentType(MediaType.APPLICATION_JSON);
         new ObjectMapper().writeValue(response.getOutputStream(), map);
 

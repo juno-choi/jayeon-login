@@ -90,6 +90,7 @@ public class GameUserServiceImpl implements GameUserService{
         GameUserEntity userEntity = gameUserRepository.findByUserId(userId);
 
         GameUserVo gameUserVo = GameUserVo.builder()
+                .id(userEntity.getId())
                 .userId(userEntity.getUserId())
                 .name(userEntity.getName())
                 .pw(userEntity.getPw())
