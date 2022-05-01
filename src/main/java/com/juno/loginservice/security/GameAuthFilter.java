@@ -2,6 +2,7 @@ package com.juno.loginservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.juno.loginservice.controller.vo.RequestLogin;
+import com.juno.loginservice.entity.GameRole;
 import com.juno.loginservice.service.GameUserService;
 import com.juno.loginservice.service.UserService;
 import com.juno.loginservice.service.vo.GameUserVo;
@@ -79,7 +80,6 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
         userMap.put("id", user.getId().toString());
         userMap.put("userId", user.getUserId());
         userMap.put("userName",user.getName());
-        userMap.put("role", user.getRoles().toString());
         /*
          * 헤더로 보낼 경우
          */
