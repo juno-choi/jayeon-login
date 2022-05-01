@@ -78,8 +78,8 @@ public class GameAuthFilter extends UsernamePasswordAuthenticationFilter {
 
         Map<String, String> userMap = new HashMap<>();
         userMap.put("id", user.getId().toString());
-        userMap.put("userId", user.getUserId());
-        userMap.put("userName",user.getName());
+        userMap.put("user_id", user.getUserId());
+        userMap.put("user_name",user.getName());
         /*
          * 헤더로 보낼 경우
          */
