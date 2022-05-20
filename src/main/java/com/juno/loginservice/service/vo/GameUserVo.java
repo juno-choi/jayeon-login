@@ -1,6 +1,6 @@
 package com.juno.loginservice.service.vo;
 
-import com.juno.loginservice.entity.GameRole;
+import com.juno.loginservice.domain.game.GameRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

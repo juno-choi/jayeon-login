@@ -2,11 +2,8 @@ package com.juno.loginservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.juno.loginservice.controller.vo.RequestLogin;
-import com.juno.loginservice.entity.GameRole;
 import com.juno.loginservice.service.GameUserService;
-import com.juno.loginservice.service.UserService;
 import com.juno.loginservice.service.vo.GameUserVo;
-import com.juno.loginservice.service.vo.UserVo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;

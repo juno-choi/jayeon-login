@@ -1,4 +1,4 @@
-package com.juno.loginservice.entity;
+package com.juno.loginservice.domain;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

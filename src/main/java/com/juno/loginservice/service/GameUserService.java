@@ -2,8 +2,8 @@ package com.juno.loginservice.service;
 
 import com.juno.loginservice.controller.vo.RequestGameUser;
 import com.juno.loginservice.controller.vo.Token;
-import com.juno.loginservice.entity.GameRole;
-import com.juno.loginservice.entity.GameUserEntity;
+import com.juno.loginservice.domain.game.GameRole;
+import com.juno.loginservice.domain.game.GameUserEntity;
 import com.juno.loginservice.service.vo.GameUserVo;
 import com.juno.loginservice.service.vo.ResponseGameUser;
 import org.springframework.security.core.userdetails.UserDetailsService;

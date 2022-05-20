@@ -1,11 +1,10 @@
 package com.juno.loginservice.service;
 
 import com.juno.loginservice.controller.code.UserCode;
-import com.juno.loginservice.entity.UserEntity;
+import com.juno.loginservice.domain.UserEntity;
 import com.juno.loginservice.controller.vo.RequestUser;
 import com.juno.loginservice.exception.CommonException;
 import com.juno.loginservice.repository.UserRepository;
-import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseUser;
 import com.juno.loginservice.service.vo.UserVo;
 import lombok.RequiredArgsConstructor;

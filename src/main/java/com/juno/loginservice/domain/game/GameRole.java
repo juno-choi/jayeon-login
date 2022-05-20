@@ -1,4 +1,4 @@
-package com.juno.loginservice.entity;
+package com.juno.loginservice.domain.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

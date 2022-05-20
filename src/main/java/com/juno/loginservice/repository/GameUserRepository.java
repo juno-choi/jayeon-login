@@ -1,6 +1,6 @@
 package com.juno.loginservice.repository;
 
-import com.juno.loginservice.entity.GameUserEntity;
+import com.juno.loginservice.domain.game.GameUserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
