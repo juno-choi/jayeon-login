@@ -5,11 +5,13 @@ import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
 import com.juno.loginservice.controller.vo.Token;
 import com.juno.loginservice.domain.game.GameRole;
-import com.juno.loginservice.domain.game.GameUserEntity;
+import com.juno.loginservice.domain.game.GameUser;
+import com.juno.loginservice.domain.game.GameUserRoleMapping;
 import com.juno.loginservice.exception.CommonException;
 import com.juno.loginservice.exception.JoinException;
 import com.juno.loginservice.repository.GameRoleRepository;
 import com.juno.loginservice.repository.GameUserRepository;
+import com.juno.loginservice.repository.GameUserRoleMappingRepository;
 import com.juno.loginservice.service.vo.GameUserVo;
 import com.juno.loginservice.service.vo.ResponseGameUser;
 import io.jsonwebtoken.Claims;
@@ -19,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -45,25 +45,33 @@ public class GameUserServiceImpl implements GameUserService{
     private final BCryptPasswordEncoder passwordEncoder;
     private final GameUserRepository gameUserRepository;
     private final GameRoleRepository gameRoleRepository;
+    private final GameUserRoleMappingRepository gameUserRoleMappingRepository;
     private final Environment env;
 
     @Override
     public ResponseGameUser join(RequestGameUser requestGameUser) {
         log.info("user join {}", requestGameUser.getName());
         //유효성 검사
-        GameUserEntity user = gameUserRepository.findByUserId(requestGameUser.getUserId());
+        GameUser user = gameUserRepository.findByUserId(requestGameUser.getUserId());
         if(user != null){
             throw new JoinException(UserCode.EXIST_USER);
         }
 
-        GameUserEntity gameUserEntity = GameUserEntity.builder()
+        GameUser gameUser = GameUser.builder()
                 .userId(requestGameUser.getUserId())
                 .pw(passwordEncoder.encode(requestGameUser.getPw()))
                 .name(requestGameUser.getName())
                 .build();
 
-        GameUserEntity save = gameUserRepository.save(gameUserEntity);
-        addRoleToUser(save.getUserId(), "ROLE_ADMIN");
+        GameUser save = gameUserRepository.save(gameUser);
+
+        GameRole role = gameRoleRepository.findByName("USER");
+        GameUserRoleMapping mapping = GameUserRoleMapping.builder()
+                .gameUser(save)
+                .gameRole(role)
+                .build();
+        save.addRole(mapping);
+        gameUserRoleMappingRepository.save(mapping);
         ResponseGameUser responseGameUser = new ResponseGameUser(save.getUserId());
 
         return responseGameUser;
@@ -78,22 +86,29 @@ public class GameUserServiceImpl implements GameUserService{
     @Override
     public void addRoleToUser(String userId, String roleName) {
         log.info("user add user = {}, role = {}",userId, roleName);
-        GameUserEntity user = gameUserRepository.findByUserId(userId);
+
+        GameUser user = gameUserRepository.findByUserId(userId);
         GameRole role = gameRoleRepository.findByName(roleName);
-        user.getRoles().add(role);
+        GameUserRoleMapping mapping = GameUserRoleMapping.builder()
+                .gameUser(user)
+                .gameRole(role)
+                .build();
+        user.addRole(mapping);
+        gameUserRoleMappingRepository.save(mapping);
     }
 
     @Override
     public GameUserVo getUserDetailByUserId(String userId) {
         log.info("getUserDetailByUserId {}",userId);
-        GameUserEntity userEntity = gameUserRepository.findByUserId(userId);
+        GameUser userEntity = gameUserRepository.findByUserId(userId);
+        //userEntity.getGameUserRoleMapping()
 
         GameUserVo gameUserVo = GameUserVo.builder()
-                .id(userEntity.getId())
+                .id(userEntity.getGameUserId())
                 .userId(userEntity.getUserId())
                 .name(userEntity.getName())
                 .pw(userEntity.getPw())
-                .roles(userEntity.getRoles())
+                .roles(null)
                 .createdAt(userEntity.getCreatedAt())
                 .build();
 
@@ -101,7 +116,7 @@ public class GameUserServiceImpl implements GameUserService{
     }
 
     @Override
-    public List<GameUserEntity> getAllUser() {
+    public List<GameUser> getAllUser() {
         return Lists.newArrayList(gameUserRepository.findAll());
     }
 
@@ -121,13 +136,13 @@ public class GameUserServiceImpl implements GameUserService{
 
                 //refresh token에는 userId와 만기일만 담겨 있음
                 String userId = claims.getSubject();
-                GameUserEntity user = gameUserRepository.findByUserId(userId);
+                GameUser user = gameUserRepository.findByUserId(userId);
 
                 //access token 재발급
                 String accessToken = Jwts.builder()
                         .setSubject(user.getUserId())
                         .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.access-token.expiration_time")))) //파기일
-                        .claim("roles", user.getRoles().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                        //.claim("roles", user.getRoles().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))    //암호화 알고리즘과 암호화 키값
                         .compact();
                 token = new Token(accessToken, refreshToken);
@@ -147,13 +162,13 @@ public class GameUserServiceImpl implements GameUserService{
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        GameUserEntity user = gameUserRepository.findByUserId(userId);
+        GameUser user = gameUserRepository.findByUserId(userId);
         if(user == null) throw new UsernameNotFoundException("user가 존재하지 않습니다.");
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+//        user.getRoles().forEach(role -> {
+//            authorities.add(new SimpleGrantedAuthority(role.getName()));
+//        });
         return new User(user.getUserId(), user.getPw(), true, true, true, true, authorities);
     }
 }

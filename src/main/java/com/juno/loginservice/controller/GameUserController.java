@@ -6,7 +6,7 @@ import com.juno.loginservice.controller.code.UserCode;
 import com.juno.loginservice.controller.vo.RequestGameUser;
 import com.juno.loginservice.controller.vo.Token;
 import com.juno.loginservice.domain.game.GameRole;
-import com.juno.loginservice.domain.game.GameUserEntity;
+import com.juno.loginservice.domain.game.GameUser;
 import com.juno.loginservice.service.GameUserService;
 import com.juno.loginservice.exception.UserException;
 import com.juno.loginservice.service.vo.ResponseGameUser;
@@ -45,19 +45,19 @@ public class GameUserController {
     /*
      * 추후에 role 매개변수를 통해 role을 추가하는 메서드로 변경해서 사용할 것
      */
-    @PostMapping("/role")
-    public ResponseEntity<CommonApi> role(){
-        GameRole role = new GameRole(null, "ROLE_ADMIN");
-        GameRole gameRole = gameUserService.saveRole(role);
-        CommonApi<Object> response = new CommonApi(CommonEnum.OK, gameRole);
-        return ResponseEntity.ok().body(response);
-    }
+//    @PostMapping("/role")
+//    public ResponseEntity<CommonApi> role(){
+//        GameRole role = new GameRole(null, "ROLE_ADMIN");
+//        GameRole gameRole = gameUserService.saveRole(role);
+//        CommonApi<Object> response = new CommonApi(CommonEnum.OK, gameRole);
+//        return ResponseEntity.ok().body(response);
+//    }
 
     //모든 game user만 조회해오는 로직
     //임시용
     @GetMapping("/user")
     public ResponseEntity<CommonApi> allUser(){
-        List<GameUserEntity> allUser = gameUserService.getAllUser();
+        List<GameUser> allUser = gameUserService.getAllUser();
         CommonApi<Object> response = new CommonApi(CommonEnum.OK, allUser);
         return ResponseEntity.ok().body(response);
     }

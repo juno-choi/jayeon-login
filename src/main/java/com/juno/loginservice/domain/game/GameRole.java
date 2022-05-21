@@ -1,15 +1,11 @@
 package com.juno.loginservice.domain.game;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -19,11 +15,21 @@ import javax.persistence.Id;
 public class GameRole implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "game_role_id")
+    private Long gameRoleId;
     private String name;
+
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    private List<GameUserRoleMapping> gameUserRoleMappings = new ArrayList<>();
 
     @Override
     public String getAuthority() {
         return name;
+    }
+
+    @Builder
+    public GameRole(Long gameRoleId, String name) {
+        this.gameRoleId = gameRoleId;
+        this.name = name;
     }
 }

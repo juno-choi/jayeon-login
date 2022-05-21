@@ -1,10 +1,10 @@
 package com.juno.loginservice.repository;
 
-import com.juno.loginservice.domain.game.GameUserEntity;
-import org.springframework.data.repository.CrudRepository;
+import com.juno.loginservice.domain.game.GameUser;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GameUserRepository extends CrudRepository<GameUserEntity, Long> {
-    GameUserEntity findByUserId(String userId);
+public interface GameUserRepository extends JpaRepository<GameUser, Long> {
+    GameUser findByUserId(String userId);
 }
